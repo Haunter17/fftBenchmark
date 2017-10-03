@@ -13,12 +13,7 @@ function F = computeFFTRep(Q, model, parameter)
 %     parameter.numFeatures specifies the number of spectrotemporal features.
 %     parameter.deltaDelay specifies the delay (in hops) to use for the 
 %       delta feature computation.
-%
-%   F is a matrix of logical values containing the computed fingerprint
-%   bits.  The rows correspond to different bits in the fingerprint, and
-%   the columns correspond to different frames.
-%
-%  2016-07-08 TJ Tsai ttsai@g.hmc.edu
+
 if nargin < 3
     parameter=[];
 end
@@ -27,22 +22,18 @@ if isfield(Q,'c')~=0
     Q = Q.c;
 end
 
-%% step 2: normalize with L1-norm 1
-l1Sum = sum(sum(abs(Q)));
-if l1Sum ~= 0
-	Q = Q / l1Sum;
-end
-
-%% step 3: preprocessing
+%% step 2: preprocessing
 prepQ = preprocessQspec_FFT(Q, parameter);
 
-%% step 4 & 5: 2D FFT with abs
-F = abs(fft2(prepQ));
+%% step 3: 2D FFT
+F = fft2(prepQ);
 
-%% step 6 & 7: find the features with top variance and the
-% corresponding threshold
 if isfield(model,'I_top') ~= 0
-	F = F(1 : floor(size(F, 1) / 2), 1 : floor(size(F, 2) / 2));
+	%% step 4: throw away the first column and keep only the top-left corner
+	F = F(2 : floor(size(F, 1) / 2), 1 : floor(size(F, 2) / 2));
+	%% step 5: take the top N/2 pixels with greatest variance
     F = F(model.I_top);
-    F = F > model.T;
+    %% step 6: stack real and imaginary part
+    F = [real(F); imag(F)];
+    F = F > 0;
 end

@@ -58,7 +58,7 @@ end
 
 agg = [];
 
-%% step 1 - 5
+%% step 1 - 4
 for index = 1 : length(curFileList)
     curfile = curFileList{index};
     disp(['Generating data on #',num2str(index),': ',curfile]);
@@ -77,23 +77,17 @@ end
 
 size(agg)
 
-%% step 6: calculate variance for each pixel and select top N values
+%% step 5: calculate variance for each pixel and select top N values
 disp(['Computing variance on the aggregated matrix ... ']);
 tic;
 
-% cut agg to preserve only the top left corner
-agg = agg(1 : floor(size(agg, 1) / 2), 1 : floor(size(agg, 2) / 2), :);
+% cut agg to preserve only the top left corner and throw away the first column
+agg = agg(2 : floor(size(agg, 1) / 2), 1 : floor(size(agg, 2) / 2), :);
 var_agg = var(agg, 0, 3);
 [~, I] = sort(var_agg(:), 'descend');
-I_top = I(1 : parameter.numFeatures);
+I_top = I(1 : (parameter.numFeatures / 2));
 toc
 
-%% step 7: determine threshold
-disp(['Computing threshold ... ']);
-tic;
-M = median(agg, 3);
-T = M(I_top);
-toc
 
 %% fetching values for analysis
 agg = reshape(agg, size(agg, 1) * size(agg, 2), 1, []);
@@ -101,4 +95,4 @@ agg_top = agg(I_top, 1, :);
 
 %% save to file
 disp(['Saving FFT models to file']);
-save(saveFilename,'filelist','parameter', 'agg_top', 'var_agg', 'I_top', 'T');
+save(saveFilename,'filelist','parameter', 'agg_top', 'var_agg', 'I_top');
