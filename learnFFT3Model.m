@@ -79,8 +79,8 @@ end
 disp(['Computing variance on the aggregated matrix ... ']);
 tic;
 
-% step 5a: cut agg to preserve only the top left corner and throw away the first column
-agg = agg(1 : floor(size(agg, 1) / 2), 2 : floor(size(agg, 2) / 2), :);
+% step 5a: cut agg to preserve only the top left corner
+agg = agg(1 : floor(size(agg, 1) / 2), 1 : floor(size(agg, 2) / 2), :);
 % step 5b: stack real and imaginary part
 agg = [real(agg); imag(agg)];
 % step 5c: sort by variance
@@ -89,11 +89,12 @@ var_agg = var(abs(agg), 0, 3);
 I_top = I(1 : parameter.numFeatures);
 toc
 
-size(var_agg)
 %% fetching values for analysis
 agg = reshape(agg, size(agg, 1) * size(agg, 2), 1, []);
 agg_top = agg(I_top, 1, :);
-size(agg_top)
+
+%% generating FFT filters for the corresponding bits
+
 
 %% save to file
 disp(['Saving FFT models to file']);

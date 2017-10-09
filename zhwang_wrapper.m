@@ -3,11 +3,11 @@
 % param.fmax = ?;
 
 %% flag setup
-TESTFLAG = 1;
+TESTFLAG = 0;
 VALFLAG = 0;
 REPFLAG = 2;
-modelName = 'hp_512b';
-reportName = 'hp_512b';
+modelName = 'fft_b';
+reportName = 'fft_b';
 artist = 'taylorswift';
 
 %% call driver

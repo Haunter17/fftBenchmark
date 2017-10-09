@@ -48,7 +48,7 @@ parfor index = 1 : length(curFileList)
         curr_agg = cat(2, curr_agg, F);
     end
     cat3 = cat(3, curr_agg, curr_agg);
-    fingerprints{index} = cat3(:, :, 1);
+    fingerprints{index} = cat3;
     idx2file{index} = curfile;
 end
 toc

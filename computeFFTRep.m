@@ -29,11 +29,12 @@ prepQ = preprocessQspec_FFT(Q, parameter);
 F = fft2(prepQ);
 
 if isfield(model,'I_top') ~= 0
-	%% step 4: throw away the first column and keep only the top-left corner
-	F = F(2 : floor(size(F, 1) / 2), 1 : floor(size(F, 2) / 2));
-	%% step 5: take the top N/2 pixels with greatest variance
+	%% step 4a: throw away the first column and keep only the top-left corner
+	F = F(1 : floor(size(F, 1) / 2), 2 : floor(size(F, 2) / 2));
+	% step 4b: stack real and imaginary part
+	F = [real(F); imag(F)];
+	%% step 5: take the top N pixels with greatest variance
     F = F(model.I_top);
-    %% step 6: stack real and imaginary part
-    F = [real(F); imag(F)];
+    %% step 6: threshold by zero
     F = F > 0;
 end
