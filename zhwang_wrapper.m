@@ -9,6 +9,10 @@ REPFLAG = 3;
 modelName = 'rep3_64';
 reportName = 'rep3_64';
 artist = 'taylorswift';
+outdir = strcat(artist, '_out/');
+
+param.m = 20;
+param.numFeatures = 64;
 
 %% call driver
 benchmarkDriver

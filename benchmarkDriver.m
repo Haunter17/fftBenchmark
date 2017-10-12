@@ -10,7 +10,6 @@ end
 
 %% precompute CQT on reflist
 reflist = strcat('./audio/', artist, '_ref.list');
-outdir = strcat(artist, '_out/');
 mkdir(outdir)
 
 param.precomputeCQT = 0;
@@ -24,10 +23,6 @@ computeFcn = 0;
 % switch for different representations
 switch REPFLAG
     case 1
-        param.m = 20;
-        param.numFeatures = 64;
-		prompt = 'Enter the number of features (default is 64): \n';
-		param.numFeatures = input(prompt);
         learnHashprintModel(reflist, modelFile, param);
         computeFcn = @computeHashprints;
 
@@ -40,10 +35,6 @@ switch REPFLAG
         computeFcn = @computeFFTRep;
 
     case 3
-        param.m = 20;
-        param.numFeatures = 64;
-        prompt = 'Enter the number of features (default is 64): \n';
-        param.numFeatures = input(prompt);
         learnFFT3Model(reflist, modelFile, param);
         computeFcn = @computeFFTRep3;
 
