@@ -5,7 +5,7 @@ if (isempty(curPool))
     myCluster = parcluster('local');
     numWorkers = myCluster.NumWorkers;
     % create a parallel pool with the number of workers in the cluster`
-    pool = parpool(ceil(numWorkers * 0.75));
+    pool = parpool(numWorkers);
 end
 
 %% precompute CQT on reflist
@@ -23,6 +23,8 @@ computeFcn = 0;
 % switch for different representations
 switch REPFLAG
     case 1
+        param.m = 20;
+        param.numFeatures = 64;
         learnHashprintModel(reflist, modelFile, param);
         computeFcn = @computeHashprints;
 
@@ -35,6 +37,8 @@ switch REPFLAG
         computeFcn = @computeFFTRep;
 
     case 3
+        param.m = 20;
+        param.numFeatures = 64;
         learnFFT3Model(reflist, modelFile, param);
         computeFcn = @computeFFTRep3;
 

@@ -70,6 +70,7 @@ for index = 1 : length(curFileList)
         curr = computeFFTRep(curr, {}, parameter);
         curr_agg = cat(3, curr_agg, abs(curr));
     end
+
     agg = cat(3, agg, curr_agg);
 end
 
