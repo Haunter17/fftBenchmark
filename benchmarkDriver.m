@@ -39,6 +39,14 @@ switch REPFLAG
         learnFFTModel(reflist, modelFile, param);
         computeFcn = @computeFFTRep;
 
+    case 3
+        param.m = 20;
+        param.numFeatures = 64;
+        prompt = 'Enter the number of features (default is 64): \n';
+        param.numFeatures = input(prompt);
+        learnFFT3Model(reflist, modelFile, param);
+        computeFcn = @computeFFTRep3;
+
     otherwise
         pass
 end
@@ -48,8 +56,11 @@ if TESTFLAG
     dbFile = strcat(outdir, modelName, '_db.mat');
     if REPFLAG == 2
         generateFFTDB(modelFile, computeFcn, reflist, dbFile);
-    else
-        generateDB(modelFile, computeFcn, reflist, dbFile);
+    else if REPFLAG == 3
+        generateFFT3DB(modelFile, computeFcn, reflist, dbFile);
+        else
+            generateDB(modelFile, computeFcn, reflist, dbFile);
+        end
     end
     disp(['Database saved at ', dbFile]);
     

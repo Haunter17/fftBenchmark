@@ -3,11 +3,11 @@
 % param.fmax = ?;
 
 %% flag setup
-TESTFLAG = 0;
+TESTFLAG = 1;
 VALFLAG = 0;
-REPFLAG = 2;
-modelName = 'fft_b';
-reportName = 'fft_b';
+REPFLAG = 3;
+modelName = 'rep3_64';
+reportName = 'rep3_64';
 artist = 'taylorswift';
 
 %% call driver

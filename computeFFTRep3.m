@@ -49,7 +49,10 @@ if isfield(parameter,'deltaDelay')==0
     parameter.deltaDelay=16;
 end
 
-spec = preprocessQspec(Q);
+if isfield(Q, 'c')~=0
+	Q = Q.c;
+end
+spec = preprocessQspec_FFT(Q);
 A = getTDE(spec,parameter);
 features = (A.'*filters(:,1:parameter.numFeatures)).';
 deltas = features(:,1:(size(features,2)-parameter.deltaDelay)) - features(:,(1+parameter.deltaDelay):end);

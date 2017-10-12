@@ -33,21 +33,13 @@ while ischar(curfile)
 end
 
 tic;
-for index = 1 : length(curFileList)
+parfor index = 1 : length(curFileList)
     curfile = curFileList{index};
     disp(['Computing fingerprints on file ',num2str(index),': ',curfile]);
     Q = computeQSpec(curfile,parameter);
-    Q = Q.c;
-    % compute hashprints on original studio track
-    sixSecLen = 1451;
-    % partition into 6-sec chunks with a hop of 3-sec
-    curr_agg = [];
-    for col = 1 : parameter.hop : size(Q, 2) - sixSecLen + 1
-        curr = Q(:, col : col + sixSecLen - 1);
-        F = computeFcn(curr, model, parameter);
-        curr_agg = cat(2, curr_agg, F);
-    end
-    cat3 = cat(3, curr_agg, curr_agg);
+    spec = Q.c;
+    curr = computeFcn(spec, model, parameter);
+    cat3 = cat(3, curr, curr);
     fingerprints{index} = cat3;
     idx2file{index} = curfile;
 end

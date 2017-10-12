@@ -64,13 +64,11 @@ for index = 1 : length(curFileList)
     disp(['Generating data on #',num2str(index),': ',curfile]);
     Q = computeQSpec(curfile, parameter);
     Q = Q.c;
-    sixSecLen = 1451;
-    % partition into 6-sec chunks with a hop of 3-sec
     curr_agg = [];
-    for col = 1 : floor(sixSecLen / 6): size(Q, 2) - sixSecLen + 1
-        curr = Q(:, col : col + sixSecLen - 1);
+    for col = 1 : parameter.m : size(Q, 2) - parameter.m + 1
+        curr = Q(:, col : col + parameter.m - 1);
         curr = computeFFTRep(curr, {}, parameter);
-        curr_agg = cat(3, curr_agg, curr);
+        curr_agg = cat(3, curr_agg, abs(curr));
     end
     agg = cat(3, agg, curr_agg);
 end
@@ -81,12 +79,10 @@ tic;
 
 % step 5a: cut agg to preserve only the top left corner
 agg = agg(1 : floor(size(agg, 1) / 2), 1 : floor(size(agg, 2) / 2), :);
-% step 5b: stack real and imaginary part
-agg = [real(agg); imag(agg)];
-% step 5c: sort by variance
-var_agg = var(abs(agg), 0, 3);
+% step 5b: sort by variance
+var_agg = var(agg, 0, 3);
 [~, I] = sort(var_agg(:), 'descend');
-I_top = I(1 : parameter.numFeatures);
+I_top = I(1 : parameter.numFeatures / 2);
 toc
 
 %% fetching values for analysis
@@ -94,8 +90,14 @@ agg = reshape(agg, size(agg, 1) * size(agg, 2), 1, []);
 agg_top = agg(I_top, 1, :);
 
 %% generating FFT filters for the corresponding bits
-
-
+filters = zeros(size(curr, 1) * parameter.m, parameter.numFeatures);
+for k = 1 : parameter.numFeatures / 2
+    [row, col] = convert2DIndex(I_top(k), size(agg, 1));
+    F_real = getFFT2filter(size(curr, 1), parameter.m, row - 1, col - 1, 1);
+    F_im = getFFT2filter(size(curr, 1), parameter.m, row - 1, col - 1, 0);
+    filters(:, 2 * (k - 1) + 1) = F_real(:);
+    filters(:, 2 * k) = F_im(:);
+end
 %% save to file
 disp(['Saving FFT models to file']);
-save(saveFilename,'filelist','parameter', 'agg_top', 'var_agg', 'I_top');
+save(saveFilename,'filelist','parameter', 'agg_top', 'var_agg', 'I_top', 'filters');

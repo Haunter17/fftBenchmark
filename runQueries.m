@@ -55,7 +55,7 @@ for index = 1 : length(curFileList)
     disp(['Processing query ',num2str(index),': ',name]);   
     % compute hashprints    
     Q = computeQSpec(curfile,parameter);
-    fpseq = computeFcn(Q,model,parameter); 
+    fpseq = computeFcn(Q,model,parameter);
     % get match scores
     R = fastMatchFpSeq(fpseq,fingerprints);
     R(:,3) = R(:,3) * hopsize; % offsets in sec instead of hops
