@@ -9,7 +9,7 @@ REPFLAG = 3;
 modelName = 'rep3_64';
 reportName = 'rep3_64';
 artist = 'taylorswift';
-outdir = strcat(artist, '_out/');
+outdir = strcat('/pylon2/ci560sp/haunter/results/', artist, '_out/');
 
 param.m = 20;
 param.numFeatures = 64;
